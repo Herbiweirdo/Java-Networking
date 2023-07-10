@@ -1,6 +1,5 @@
 import java.io.*;  
 import java.net.*;
-import java.util.Scanner;
 
 public class MyClient 
 {  
@@ -8,19 +7,26 @@ public class MyClient
     {  
         try
         {   
-            String str;   
-            Socket s=new Socket("localhost",6666);  
-            DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-            Scanner scan = new Scanner(System.in);
-            
-            System.out.println("Enter Message: ");
-            str = scan.nextLine();
-            scan.close();
+            String str = "", str2 = "";
 
-            dout.writeUTF(str);  
-            dout.flush();  
-            dout.close();  
-            s.close();  
+            Socket s = new Socket("localhost",3333);  
+
+            DataInputStream din = new DataInputStream(s.getInputStream());
+            DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+
+            while(!str.equals("stop"))
+            {  
+                str = br.readLine();  
+                dout.writeUTF(str);  
+                dout.flush();  
+                str2 = din.readUTF();  
+                System.out.println("Server says: "+str2);  
+            }   
+
+            dout.close();
+            s.close();
         }
         catch(Exception e)
         {
